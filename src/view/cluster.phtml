@@ -1,0 +1,222 @@
+<style>
+.nodeStatisticsDetailsRow {
+	display: none;
+}
+.btnShowStatisticsDetails {
+
+}
+.btnHideStatisticsDetails {
+	display: none;
+}
+</style>
+
+<div class="alerts"></div>
+
+<?php if (isset($this->_view->cluster)): ?>
+	<h1><?php echo $this->_view->cluster['name']; ?></h1>
+	<hr />
+
+	<h2>Cluster information</h2>
+
+	<div class="row">
+		<div class="span5 well">
+			<div class="row">
+				<div class="span4">
+					<div class="row">
+						<div class="span2">Max Cache Size</div>
+						<div class="span2"><?php echo $this->_view->cluster['memSize']; ?></div>
+					</div>
+					<div class="row">
+						<div class="span2">Used Cache Size</div>
+						<div class="span2"><?php echo $this->_view->cluster['memUsed']; ?></div>
+					</div>
+					<div class="row">
+						<div class="span2">Availiable Cache Size</div>
+						<div class="span2"><?php echo $this->_view->cluster['memAvailable']; ?></div>
+					</div>
+				</div>
+				<div class="span1">
+					<div class="btn-group">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							Action
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="javascript:void(0);" class="btnFlushAll"><i class="icon-fire"></i> Flush all nodes</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<h2>Node information</h2>
+
+	<?php if (isset($this->_view->nodes)): ?>
+		<?php $i=0; foreach($this->_view->nodes as $node): ?>
+			<?php if ($i==0): ?><div class="row"><?php endif; ?>
+				<a name="node_<?php echo $node['node_id']; ?>"></a>
+				<div class="span5 well">
+					<legend><?php echo $node['name']; ?></legend>
+					<div class="row">
+						<div class="span4">				
+							<div class="row">
+								<div class="span2">State</div>
+								<div class="span2"><span class="label <?php if ($node['state'] == 'UP'): ?>label-success<?php else: ?>label-important<?php endif; ?>"><?php if ($node['state'] == 'UP'): ?>UP<?php else: ?>DOWN<?php endif; ?></span></div>
+							</div>
+							<div class="row">
+								<div class="span2">Response time</div>
+								<div class="span2"><?php echo $node['responseTime']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">IP/Port</div>
+								<div class="span2"><?php echo $node['ip']; ?>:<?php echo $node['port']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">Start Time</div>
+								<div class="span2"><?php echo $node['startTime']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">Uptime</div>
+								<div class="span2"><?php echo $node['upTime']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">Server Version</div>
+								<div class="span2"><?php echo $node['version']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">Max Cache Size</div>
+								<div class="span2"><?php echo $node['memSize']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">Used Cache Size</div>
+								<div class="span2"><?php echo $node['memUsed']; ?></div>
+							</div>
+							<div class="row">
+								<div class="span2">Availiable Cache Size</div>
+								<div class="span2"><?php echo $node['memAvailable']; ?></div>
+							</div>
+						</div>
+						<div class="span1">
+							<div class="btn-group">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+									Action
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="btnShowStatisticsDetails node_<?php echo $node['node_id']; ?>">
+										<a href="javascript:void(0);" rel="node_<?php echo $node['node_id']; ?>"><i class="icon-zoom-in"></i> Show statistics details</a>
+									</li>
+									<li class="btnHideStatisticsDetails node_<?php echo $node['node_id']; ?>">
+										<a href="javascript:void(0);" rel="node_<?php echo $node['node_id']; ?>"><i class="icon-zoom-out"></i> Hide statistics details</a>
+									</li>
+									<li>
+										<a href=".?a=slabs&amp;c=<?php echo $this->_view->cluster['name']; ?>&amp;n=<?php echo $node['name']; ?>"><i class="icon-list"></i> Show items</a>
+									</li>
+									<li>
+										<a href="javascript:void(0);" rel="<?php echo $node['name']; ?>" class="btnFlush"><i class="icon-fire"></i> Flush node</a>
+									</li>									
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="row nodeStatisticsDetailsRow node_<?php echo $node['node_id']; ?>">
+						<div class="span5">
+							<hr />
+							<div class="row"><div class="span3">Process id of this server process</div><div class="span1"><?php echo $node['stats']['pid']; ?></div></div>
+							<div class="row"><div class="span3">Number of secs since the server started</div><div class="span1"><?php echo $node['stats']['uptime']; ?></div></div>
+							<div class="row"><div class="span3">current UNIX time according to the server</div><div class="span1"><?php echo $node['stats']['time']; ?></div></div>
+							<div class="row"><div class="span3">Version string of this server</div><div class="span1"><?php echo $node['stats']['version']; ?></div></div>
+							<div class="row"><div class="span3">Default size of pointers on the host OS (generally 32 or 64) </div><div class="span1"><?php echo $node['stats']['pointer_size']; ?></div></div>
+							<div class="row"><div class="span3">Accumulated user time for this process (seconds:microseconds) </div><div class="span1"><?php echo $node['stats']['rusage_user']; ?></div></div>
+							<div class="row"><div class="span3">Accumulated system time for this process (seconds:microseconds)</div><div class="span1"><?php echo $node['stats']['rusage_system']; ?></div></div>
+							<div class="row"><div class="span3">Current number of items stored</div><div class="span1"><?php echo $node['stats']['curr_items']; ?></div></div>
+							<div class="row"><div class="span3">Total number of items stored since the server started</div><div class="span1"><?php echo $node['stats']['total_items']; ?></div></div>
+							<div class="row"><div class="span3">Current number of bytes used to store items</div><div class="span1"><?php echo $node['stats']['bytes']; ?></div></div>
+							<div class="row"><div class="span3">Number of open connections</div><div class="span1"><?php echo $node['stats']['curr_connections']; ?></div></div>
+							<div class="row"><div class="span3">Total number of connections opened since the server started running </div><div class="span1"><?php echo $node['stats']['total_connections']; ?></div></div>
+							<div class="row"><div class="span3">Number of connection structures allocated by the server</div><div class="span1"><?php echo $node['stats']['connection_structures']; ?></div></div>
+							<div class="row"><div class="span3">Number of misc fds used internally</div><div class="span1"><?php echo $node['stats']['reserved_fds']; ?></div></div>
+							<div class="row"><div class="span3">Cumulative number of retrieval reqs</div><div class="span1"><?php echo $node['stats']['cmd_get']; ?></div></div>
+							<div class="row"><div class="span3">Cumulative number of storage reqs</div><div class="span1"><?php echo $node['stats']['cmd_set']; ?></div></div>
+							<div class="row"><div class="span3">Cumulative number of flush reqs</div><div class="span1"><?php echo $node['stats']['cmd_flush']; ?></div></div>
+							<div class="row"><div class="span3">Cumulative number of touch reqs</div><div class="span1"><?php echo $node['stats']['cmd_touch']; ?></div></div>
+							<div class="row"><div class="span3">Number of keys that have been requested  and found present</div><div class="span1"><?php echo $node['stats']['get_hits']; ?></div></div>
+							<div class="row"><div class="span3">Number of items that have been requested and not found </div><div class="span1"><?php echo $node['stats']['get_misses']; ?></div></div>
+							<div class="row"><div class="span3">Number of deletions reqs for missing keys</div><div class="span1"><?php echo $node['stats']['delete_misses']; ?></div></div>
+							<div class="row"><div class="span3">Number of deletion reqs resulting in an item being removed.</div><div class="span1"><?php echo $node['stats']['delete_hits']; ?></div></div>
+							<div class="row"><div class="span3">Number of incr reqs against missing keys.</div><div class="span1"><?php echo $node['stats']['incr_misses']; ?></div></div>
+							<div class="row"><div class="span3">Number of successful incr reqs.</div><div class="span1"><?php echo $node['stats']['incr_hits']; ?></div></div>
+							<div class="row"><div class="span3">Number of decr reqs against missing keys.</div><div class="span1"><?php echo $node['stats']['decr_misses']; ?></div></div>
+							<div class="row"><div class="span3">Number of successful decr reqs.</div><div class="span1"><?php echo $node['stats']['decr_hits']; ?></div></div>
+							<div class="row"><div class="span3">Number of CAS reqs against missing keys. </div><div class="span1"><?php echo $node['stats']['cas_misses']; ?></div></div>
+							<div class="row"><div class="span3">Number of successful CAS reqs.</div><div class="span1"><?php echo $node['stats']['cas_hits']; ?></div></div>
+							<div class="row"><div class="span3">Number of CAS reqs for which a key was found, but the CAS value did not match.</div><div class="span1"><?php echo $node['stats']['cas_badval']; ?></div></div>
+							<div class="row"><div class="span3">Numer of keys that have been touched with a new expiration time</div><div class="span1"><?php echo $node['stats']['touch_hits']; ?></div></div>
+							<div class="row"><div class="span3">Numer of items that have been touched and not found </div><div class="span1"><?php echo $node['stats']['touch_misses']; ?></div></div>
+							<div class="row"><div class="span3">Number of authentication commands handled, success or failure.</div><div class="span1"><?php echo $node['stats']['auth_cmds']; ?></div></div>
+							<div class="row"><div class="span3">Number of failed authentications.</div><div class="span1"><?php echo $node['stats']['auth_errors']; ?></div></div>
+							<div class="row"><div class="span3">Number of valid items removed from cache to free memory for new items </div><div class="span1"><?php echo $node['stats']['evictions']; ?></div></div>
+							<div class="row"><div class="span3">Number of times an entry was stored using memory from an expired entry</div><div class="span1"><?php echo $node['stats']['reclaimed']; ?></div></div>
+							<div class="row"><div class="span3">Total number of bytes read by this server from network </div><div class="span1"><?php echo $node['stats']['bytes_read']; ?></div></div>
+							<div class="row"><div class="span3">Total number of bytes sent by this server to network </div><div class="span1"><?php echo $node['stats']['bytes_written']; ?></div></div>
+							<div class="row"><div class="span3">Number of bytes this server is allowed to use for storage.</div><div class="span1"><?php echo $node['stats']['limit_maxbytes']; ?></div></div>
+							<div class="row"><div class="span3">Number of worker threads requested.</div><div class="span1"><?php echo $node['stats']['threads']; ?></div></div>
+							<div class="row"><div class="span3">Number of times any connection yielded to another due to hitting the -R limit. </div><div class="span1"><?php echo $node['stats']['conn_yields']; ?></div></div>
+							<div class="row"><div class="span3">Current size multiplier for hash table</div><div class="span1"><?php echo $node['stats']['hash_power_level']; ?></div></div>
+							<div class="row"><div class="span3">Bytes currently used by hash tables</div><div class="span1"><?php echo $node['stats']['hash_bytes']; ?></div></div>
+							<div class="row"><div class="span3">Indicates if the hash table is being grown to a new size</div><div class="span1"><?php echo $node['stats']['hash_is_expanding']; ?></div></div>
+							<div class="row"><div class="span3">Items pulled from LRU that were never touched by get/incr/append/etc before expiring </div><div class="span1"><?php echo $node['stats']['expired_unfetched']; ?></div></div>
+							<div class="row"><div class="span3">Items evicted from LRU that were never touched by get/incr/append/etc.</div><div class="span1"><?php echo $node['stats']['evicted_unfetched']; ?></div></div>
+							<div class="row"><div class="span3">If a slab page is being moved</div><div class="span1"><?php echo $node['stats']['slab_reassign_running']; ?></div></div>
+							<div class="row"><div class="span3">Total slab pages moved</div><div class="span1"><?php echo $node['stats']['slabs_moved']; ?></div></div>
+						</div>
+					</div>
+				</div>
+			<?php $i++; ?>
+			<?php if ($i==2): ?></div><?php $i=0; endif; ?>
+		<?php endforeach; ?>
+		<?php if ($i==1): ?></div><?php endif; ?>
+
+		<script type="text/javascript">
+		$.each($("li.btnShowStatisticsDetails a"), function(i, e) {
+			$(e).click(function() {
+				$("li.btnShowStatisticsDetails."+$(this).attr("rel")).hide();
+				$("li.btnHideStatisticsDetails."+$(this).attr("rel")).show();
+				$("div.nodeStatisticsDetailsRow."+$(this).attr("rel")).show();
+			});
+		});
+		$.each($("li.btnHideStatisticsDetails a"), function(i, e) {
+			$(e).click(function() {
+				$("li.btnHideStatisticsDetails."+$(this).attr("rel")).hide();
+				$("li.btnShowStatisticsDetails."+$(this).attr("rel")).show();
+				$("div.nodeStatisticsDetailsRow."+$(this).attr("rel")).hide();
+			});
+		});
+		function flush(rel) {
+			$.get(".?a=flush&c=<?php echo $this->_view->cluster['name']; ?>&n="+rel, function(data) {
+				if (data.code && data.code == 'OK') {
+					$("div.alerts").append('<div rel="'+rel+'" class="alertFlashNode alert alert-success">Flushed node <b>'+rel+'</b> successfully.</div>');
+				} else {
+					$("div.alerts").append('<div rel="'+rel+'" class="alertFlashNode alert alert-error">Flushing node <b>'+rel+'</b> failed.</div>');
+				}
+				var timeout = setTimeout(function() {
+					$("div.alerts div[rel='"+rel+"']").remove();
+				}, 4000);
+			});
+		}
+		$(".btnFlush").click(function() {
+			var rel = $(this).attr("rel");
+			flush(rel);
+		});
+		$(".btnFlushAll").click(function() {
+			<?php foreach($this->_view->nodes as $node): ?>
+				flush("<?php echo $node['name']; ?>");
+			<?php endforeach; ?>
+		});
+		</script>
+
+	<?php endif; ?>
+<?php endif; ?>

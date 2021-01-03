@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>memcadmin</title>		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="memcadmin">
+		<meta name="author" content="Christoph Slamanig">
+		<link href="lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<style type="text/css">
+		body {
+			padding-top: 60px;
+			padding-bottom: 40px;
+		}
+		footer {
+			color: gray;
+			font-size: 10px;
+		}
+		</style>
+		<link href="lib/twitter-bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<script src="js/jquery-1.8.1.min.js"></script>
+		<script src="lib/twitter-bootstrap/js/bootstrap.min.js"></script>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+		  <div class="navbar-inner">
+			<div class="container">
+			  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </a>
+			  <a class="brand" href=".">memcadmin</a>
+			  <div class="nav-collapse collapse">
+				<ul class="nav">
+					<li><a href=".?a=overview">Overview</a></li>
+					<?php if ($this->_structure): ?>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Cluster <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<?php $f=true; foreach($this->_structure as $cluster): ?>
+									<?php if (!$f): ?><li class="divider"></li><?php endif; ?>
+									<li><a href=".?a=cluster&amp;c=<?php echo $cluster->getName(); ?>"><?php echo $cluster->getName(); ?></a></li>
+									<?php foreach($cluster->getNodes() as $node): ?>
+										<li><a href=".?a=slabs&amp;c=<?php echo $cluster->getName(); ?>&amp;n=<?php echo $node->getName(); ?>"><i class="icon-chevron-right"></i> <?php echo $node->getName(); ?></a></li>
+									<?php endforeach; ?>
+								<?php $f=false; endforeach; ?>
+							</ul>
+						</li>
+					<?php endif; ?>
+				</ul>	            
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<div class="container">
+			<?php echo $ob_content; ?>
+			<hr>
+			<footer>
+				<p>memcadmin, by Christoph Slamanig.</p>
+			</footer>
+		</div>
+	</body>
+</html>

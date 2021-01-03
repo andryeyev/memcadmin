@@ -1,0 +1,74 @@
+<?php if ($this->_view->nodeName): ?>
+	<h1><?php echo $this->_view->clusterName; ?> : <?php echo $this->_view->nodeName; ?></h1>
+	
+	<h2>Search</h2>
+
+	<div class="row">
+		<div class="span12 well">
+			<div class="row">
+				<div class="span2">
+					<div class="btn-group" id="searchTypeDrowndown">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="icon-tag"></i> <span class="name">Exact</span>
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="javascript:void(0);"><i class="icon-tag"></i> <span>Exact</span></a>
+								<a href="javascript:void(0);"><i class="icon-tags"></i> <span>Wildcard</span></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="span5">
+					<div class="input-append">
+						<input class="span4" id="searchQuery" size="32" type="text">
+						<button class="btn btn-primary" id="btnSearch" type="button">Search</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div id="resultList" class="span12 well" style="display:none;"></div>
+	</div>
+
+	<div class="row">
+		<div class="span12">
+			<iframe style="width: 100%; height: 400px;"></iframe>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	$("div#searchTypeDrowndown .dropdown-menu a").click(function() {
+		$("div#searchTypeDrowndown > a span.name").html($(this).find("span").html());
+		$("div#searchTypeDrowndown > a i").attr("class", "");
+		$("div#searchTypeDrowndown > a i").addClass($(this).find("i").attr("class"));
+	});
+	$("button#btnSearch").click(function (){
+		var key = $("input#searchQuery").val(),
+			type = $("div#searchTypeDrowndown > a span.name").html();
+		if (type == "Exact") {
+			$("div#resultList").hide();
+			$("iframe").attr("src", ".?a=valueplain&c=<?php echo $this->_view->clusterName; ?>&n=<?php echo $this->_view->nodeName; ?>&k="+key);
+		}
+		else if (type == "Wildcard") {
+			$("iframe").attr("src", "");
+			$.get(".?a=wildcard&c=<?php echo $this->_view->clusterName; ?>&n=<?php echo $this->_view->nodeName; ?>&k="+key, function(data) {
+				if (data) {
+					$("div#resultList").empty();
+					$.each(data, function(i, e) {
+						$("div#resultList").append('<a class="exactLink" href="javascript:void(0);" rel="'+e+'">'+e+"</a><br />");
+					});
+					$("div#resultList").show();
+				}
+				$("a.exactLink").click(function() {
+					$("iframe").attr("src", ".?a=valueplain&c=<?php echo $this->_view->clusterName; ?>&n=<?php echo $this->_view->nodeName; ?>&k="+$(this).attr("rel"));
+				});
+			});
+		}
+	});
+	</script>
+<?php endif; ?>

@@ -1,0 +1,43 @@
+<style>
+.right {
+	text-align: right !important;
+}
+</style>
+
+<?php if ($this->_view->items): ?>
+
+	<h1><?php echo $this->_view->clusterName; ?> : <?php echo $this->_view->nodeName; ?></h1>
+
+	<div class="navbar">
+		<div class="navbar-inner">
+			<ul class="nav">
+				<li><a href=".?a=slabs&amp;c=<?php echo $this->_view->clusterName; ?>&amp;n=<?php echo $this->_view->nodeName; ?>">Slabs</a></li>
+				<li<?php if(!$this->_view->requestSlabId): ?> class="active"<?php endif; ?>><a href=".?a=items&amp;c=<?php echo $this->_view->clusterName; ?>&amp;n=<?php echo $this->_view->nodeName; ?>">All items</a></li>
+				<li><a href=".?a=search&amp;c=<?php echo $this->_view->clusterName; ?>&amp;n=<?php echo $this->_view->nodeName; ?>">Search</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<table class="table table-striped table-condensed">
+		<thead>
+			<tr>
+				<th width="10%">Slab ID</th>
+				<th width="60%">Key</th>
+				<th width="20%">Size</th>
+				<th width="10%"></th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach($this->_view->items as $item): ?>
+			<tr>
+				<td><?php echo $item['slabId']; ?></td>
+				<td class="columnKey"><?php echo $item['key']; ?></td>
+				<td><?php echo $item['size']; ?></td>
+				<td class="right">
+					<a class="btn btn-small btn-primary" href=".?a=value&amp;c=<?php echo $this->_view->clusterName; ?>&amp;n=<?php echo $this->_view->nodeName; ?>&amp;k=<?php echo $item['key']; ?>"><i class="icon-zoom-in icon-white"></i> Show value</a>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+<?php endif; ?>
